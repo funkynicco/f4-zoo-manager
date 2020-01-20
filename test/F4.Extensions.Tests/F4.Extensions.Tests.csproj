@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\F4.Zoo\F4.Zoo.csproj" />
+    <ProjectReference Include="..\..\src\F4.Extensions\F4.Extensions.csproj" />
   </ItemGroup>
 
 </Project>

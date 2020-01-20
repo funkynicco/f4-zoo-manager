@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\F4.Extensions\F4.Extensions.csproj" />
     <ProjectReference Include="..\F4.Zoo.Interfaces\F4.Zoo.Interfaces.csproj" />
   </ItemGroup>
 
