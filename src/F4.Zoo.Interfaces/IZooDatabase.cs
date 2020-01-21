@@ -30,5 +30,10 @@ namespace F4.Zoo.Interfaces
         /// </summary>
         /// <param name="id">Animal id</param>
         bool Delete(Guid id);
+
+        /// <summary>
+        /// Deletes all the animals in the database.
+        /// </summary>
+        void DeleteAll();
     }
 }

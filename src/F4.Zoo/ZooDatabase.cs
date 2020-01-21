@@ -88,6 +88,15 @@ namespace F4.Zoo
             return true;
         }
 
+        public void DeleteAll()
+        {
+            if (_animals.Count == 0)
+                return;
+
+            _animals.Clear();
+            Save();
+        }
+
         private void Save()
         {
             var doc = new XmlDocument();
