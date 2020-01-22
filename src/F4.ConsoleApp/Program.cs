@@ -10,11 +10,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 
-// database file of zoo animals / store state? xml?
-// can add animals / menu system? list animals like a db?
-// maybe a menu like f1 to advance week / f2 to add animal (enter parameters)
-// 
-
 namespace F4.ConsoleApp
 {
     class Program
@@ -50,10 +45,10 @@ namespace F4.ConsoleApp
 
             CreateRandomAnimals(zoo.Database);
 
-            var consoleManager = ConsoleManager.Create();
+            var consoleManager = ConsoleManager.Create(zoo);
 
-            consoleManager.CreateWindow<IAnimalList>()
-                .SetZooDatabase(zoo.Database);
+            //consoleManager.CreateWindow<IAnimalList>()
+            //    .SetZooDatabase(zoo.Database);
 
             //consoleManager.CreateWindow<IMessage>()
             //    .SetText("Johnny the Crazy Elephant was killed by Furrball.");
@@ -63,8 +58,8 @@ namespace F4.ConsoleApp
 
             while (true)
             {
-                consoleManager.Process();
-                Thread.Sleep(50);
+                if (!consoleManager.Process())
+                    Thread.Sleep(50);
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using F4.Extensions;
+using F4.UserInterface.Interfaces.Buffering;
 using F4.UserInterface.Interfaces.Windows;
 using F4.Zoo.Interfaces;
 using System;
@@ -14,9 +15,10 @@ namespace F4.UserInterface.Windows
         private IZooDatabase _database;
         private int _selectedIndex = 0;
 
-        public AnimalList(IConsoleManagerInternal manager) :
+        public AnimalList(IConsoleManagerInternal manager, IZooDatabase database) :
             base(manager)
         {
+            _database = database;
             Title = "Animals";
         }
 
@@ -39,16 +41,16 @@ namespace F4.UserInterface.Windows
             _database = database;
         }
 
-        public override void Draw()
+        public override void Draw(IScreenBuffer screenBuffer)
         {
-            base.Draw();
+            base.Draw(screenBuffer);
 
             if (_database == null)
                 return;
 
-            ConsoleHelper.Draw(ClientRectangle.X, ClientRectangle.Y, "Species");
-            ConsoleHelper.Draw(ClientRectangle.X + 10, ClientRectangle.Y, "Name");
-            ConsoleHelper.Draw(ClientRectangle.X + 30, ClientRectangle.Y, "Age");
+            screenBuffer.Draw(ClientRectangle.X, ClientRectangle.Y, "Species");
+            screenBuffer.Draw(ClientRectangle.X + 10, ClientRectangle.Y, "Name");
+            screenBuffer.Draw(ClientRectangle.X + 30, ClientRectangle.Y, "Age");
 
             int index = 0;
 
@@ -56,7 +58,6 @@ namespace F4.UserInterface.Windows
             foreach (var animal in _database.Animals)
             {
                 var line = $"{animal.Species.PadRight(10)}{animal.Name.PadRight(20)}{animal.Age}";
-                line = line.PadRight(ClientRectangle.Width, ' ');
 
                 var fc = ConsoleColor.Gray;
                 var bc = ConsoleColor.Black;
@@ -64,7 +65,7 @@ namespace F4.UserInterface.Windows
                 if (index == _selectedIndex)
                     bc = ConsoleColor.Blue;
 
-                ConsoleHelper.Draw(ClientRectangle.X, y, line, fc, bc);
+                screenBuffer.Draw(ClientRectangle.X, y, line, fc, bc);
 
                 if (++y >= ClientRectangle.Bottom)
                     break;
@@ -75,6 +76,12 @@ namespace F4.UserInterface.Windows
 
         public override void OnInputKey(ConsoleKeyInfo key)
         {
+            if (key.Key == ConsoleKey.Escape)
+            {
+                Close();
+                return;
+            }
+
             if (key.Key == ConsoleKey.UpArrow)
             {
                 if (_selectedIndex > 0)

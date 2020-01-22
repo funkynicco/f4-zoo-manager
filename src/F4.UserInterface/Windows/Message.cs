@@ -1,4 +1,5 @@
 ﻿using F4.Extensions;
+using F4.UserInterface.Interfaces.Buffering;
 using F4.UserInterface.Interfaces.Windows;
 using System;
 using System.Collections.Generic;
@@ -35,10 +36,10 @@ namespace F4.UserInterface.Windows
             ConsoleManager.Redraw();
         }
 
-        public override void Draw()
+        public override void Draw(IScreenBuffer screenBuffer)
         {
-            base.Draw();
-            ConsoleHelper.Draw(ClientRectangle.X, ClientRectangle.Y, _message);
+            base.Draw(screenBuffer);
+            screenBuffer.Draw(ClientRectangle.X, ClientRectangle.Y, _message);
         }
 
         public override void OnInputKey(ConsoleKeyInfo key)

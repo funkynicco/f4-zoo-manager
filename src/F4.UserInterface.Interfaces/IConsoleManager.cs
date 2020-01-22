@@ -8,7 +8,7 @@ namespace F4.UserInterface.Interfaces
         /// <summary>
         /// Processes the console manager logic.
         /// </summary>
-        void Process();
+        bool Process();
 
         /// <summary>
         /// Creates a window and adds it to the window stack.

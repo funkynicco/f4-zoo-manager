@@ -19,5 +19,7 @@ namespace F4.Zoo
 
         public static IZooManager FromDatabase(IZooDatabase database)
             => new ZooManager(database);
+
+        // process logic for lion eating an animal here...
     }
 }

@@ -13,7 +13,7 @@ namespace F4.Zoo
     public class ZooDatabase : IZooDatabase
     {
         private readonly string _filename;
-        private readonly Dictionary<Guid, Animal> _animals = new Dictionary<Guid, Animal>();
+        private readonly Dictionary<Guid, IAnimal> _animals = new Dictionary<Guid, IAnimal>();
 
         public IEnumerable<IAnimal> Animals => _animals.Values;
 
@@ -75,7 +75,7 @@ namespace F4.Zoo
 
         public IAnimal Get(Guid id)
         {
-            _animals.TryGetValue(id, out Animal animal);
+            _animals.TryGetValue(id, out IAnimal animal);
             return animal;
         }
 

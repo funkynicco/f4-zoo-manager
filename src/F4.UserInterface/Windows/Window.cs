@@ -1,5 +1,6 @@
 ﻿using F4.Extensions;
 using F4.UserInterface.Interfaces.Windows;
+using F4.UserInterface.Interfaces.Buffering;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -37,7 +38,7 @@ namespace F4.UserInterface.Windows
             }
         }
 
-        protected Window(IConsoleManagerInternal manager)
+        public Window(IConsoleManagerInternal manager)
         {
             ConsoleManager = manager;
             _title = GetType().Name;
@@ -58,39 +59,30 @@ namespace F4.UserInterface.Windows
         protected void Invalidate()
             => ConsoleManager.Invalidate(this);
 
-        private void ClearWindowRegion()
+        private void DrawWindowBorders(IScreenBuffer screenBuffer)
         {
-            var row = "".PadRight(WindowRectangle.Width, ' ');
-            for (int y = 0; y < WindowRectangle.Height; ++y)
-            {
-                ConsoleHelper.Draw(WindowRectangle.X, WindowRectangle.Y + y, row);
-            }
-        }
-
-        private void DrawWindowBorders()
-        {
-            ConsoleHelper.Draw(WindowRectangle.Location, '╔');
-            ConsoleHelper.Draw(WindowRectangle.X, WindowRectangle.Y + WindowRectangle.Height - 1, '╚');
+            screenBuffer.Draw(WindowRectangle.X, WindowRectangle.Y, '╔');
+            screenBuffer.Draw(WindowRectangle.X, WindowRectangle.Y + WindowRectangle.Height - 1, '╚');
             for (int x = 0; x < WindowRectangle.Width - 2; ++x)
             {
-                ConsoleHelper.Draw(WindowRectangle.X + x + 1, WindowRectangle.Y, '═');
-                ConsoleHelper.Draw(WindowRectangle.X + x + 1, WindowRectangle.Y + WindowRectangle.Height - 1, '═');
+                screenBuffer.Draw(WindowRectangle.X + x + 1, WindowRectangle.Y, '═');
+                screenBuffer.Draw(WindowRectangle.X + x + 1, WindowRectangle.Y + WindowRectangle.Height - 1, '═');
             }
-            ConsoleHelper.Draw(WindowRectangle.X + WindowRectangle.Width - 1, WindowRectangle.Y, '╗');
-            ConsoleHelper.Draw(WindowRectangle.X + WindowRectangle.Width - 1, WindowRectangle.Y + WindowRectangle.Height - 1, '╝');
+            screenBuffer.Draw(WindowRectangle.X + WindowRectangle.Width - 1, WindowRectangle.Y, '╗');
+            screenBuffer.Draw(WindowRectangle.X + WindowRectangle.Width - 1, WindowRectangle.Y + WindowRectangle.Height - 1, '╝');
 
             // vertical bars
             for (int y = 0; y < WindowRectangle.Height - 2; ++y)
             {
-                ConsoleHelper.Draw(WindowRectangle.X, WindowRectangle.Y + y + 1, '║');
-                ConsoleHelper.Draw(WindowRectangle.X + WindowRectangle.Width - 1, WindowRectangle.Y + y + 1, '║');
+                screenBuffer.Draw(WindowRectangle.X, WindowRectangle.Y + y + 1, '║');
+                screenBuffer.Draw(WindowRectangle.X + WindowRectangle.Width - 1, WindowRectangle.Y + y + 1, '║');
             }
 
             // draw window title if its not too long
             if (_title.Length <= WindowRectangle.Width - 2)
             {
                 // draw at the center top
-                ConsoleHelper.Draw(
+                screenBuffer.Draw(
                     WindowRectangle.X + WindowRectangle.Width / 2 - _title.Length / 2,
                     WindowRectangle.Y,
                     _title);
@@ -116,10 +108,9 @@ namespace F4.UserInterface.Windows
                 WindowRectangle.Bottom <= consoleRect.Bottom;
         }
 
-        public virtual void Draw()
+        public virtual void Draw(IScreenBuffer screenBuffer)
         {
-            ClearWindowRegion();
-            DrawWindowBorders();
+            DrawWindowBorders(screenBuffer);
         }
 
         public virtual void OnInputKey(ConsoleKeyInfo key)
