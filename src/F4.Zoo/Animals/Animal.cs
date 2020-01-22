@@ -33,7 +33,7 @@ namespace F4.Zoo.Animals
             Weight = weight;
         }
 
-        public void NextWeek() // proceed to next week by adding 7 days to the animals age
+        public void AdvanceWeek() // proceed to next week by adding 7 days to the animals age
             => Age += TimeSpan.FromDays(7);
 
         public abstract float CalculateRequiredFood();

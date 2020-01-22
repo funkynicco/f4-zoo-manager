@@ -1,5 +1,6 @@
 ﻿using F4.UserInterface.Interfaces.Buffering;
 using F4.UserInterface.Interfaces.Windows;
+using F4.Zoo.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -9,9 +10,12 @@ namespace F4.UserInterface.Windows
 {
     internal class Desktop : Window, IDesktop
     {
-        public Desktop(IConsoleManagerInternal manager) :
+        private readonly IZooManager _zooManager;
+
+        public Desktop(IConsoleManagerInternal manager, IZooManager zooManager) :
             base(manager)
         {
+            _zooManager = zooManager;
         }
 
         public override void UpdateWindowRect()
@@ -40,7 +44,15 @@ namespace F4.UserInterface.Windows
             }
             else if (key.Key == ConsoleKey.F3)
             {
-                //ConsoleManager.CreateWindow<>
+                var killedAnimalResult = _zooManager.AdvanceWeek();
+
+                var message =
+                    killedAnimalResult != null ?
+                    $"Week advanced, a poor {killedAnimalResult.Target.Species} named {killedAnimalResult.Target.Name} was killed by {killedAnimalResult.Killer.Name}!" :
+                    "Week advanced, no animals were harmed!";
+
+                ConsoleManager.CreateWindow<IMessage>()
+                    .SetText(message);
             }
             else if (key.Key == ConsoleKey.F4)
             {

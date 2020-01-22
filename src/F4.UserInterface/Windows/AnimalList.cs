@@ -28,17 +28,11 @@ namespace F4.UserInterface.Windows
             var rect = new Rectangle(
                 0,
                 0,
-                Math.Min(100, consoleRect.Width),
+                Math.Min(45, consoleRect.Width),
                 Math.Min(30, consoleRect.Height));
 
             CenterRectangle(ref rect);
-
             WindowRectangle = rect;
-        }
-
-        public void SetZooDatabase(IZooDatabase database)
-        {
-            _database = database;
         }
 
         public override void Draw(IScreenBuffer screenBuffer)
@@ -57,7 +51,7 @@ namespace F4.UserInterface.Windows
             int y = ClientRectangle.Y + 2;
             foreach (var animal in _database.Animals)
             {
-                var line = $"{animal.Species.PadRight(10)}{animal.Name.PadRight(20)}{animal.Age}";
+                var line = $"{animal.Species.PadRight(10)}{animal.Name.Clip(19).PadRight(20)}{animal.Age.ToBirthdayFormat()}";
 
                 var fc = ConsoleColor.Gray;
                 var bc = ConsoleColor.Black;

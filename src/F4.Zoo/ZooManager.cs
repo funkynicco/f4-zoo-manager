@@ -1,25 +1,126 @@
 ﻿using F4.Zoo.Animals;
 using F4.Zoo.Interfaces;
+using F4.Zoo.Interfaces.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Text;
 
 namespace F4.Zoo
 {
     public class ZooManager : IZooManager
     {
-        private readonly IZooDatabase _database;
+        public IRandomizer Randomizer { get; }
 
-        public IZooDatabase Database => _database;
+        public IZooDatabase Database { get; }
 
-        private ZooManager(IZooDatabase database)
+        private ZooManager(IRandomizer randomizer, IZooDatabase database)
         {
-            _database = database;
+            Randomizer = randomizer;
+            Database = database;
         }
 
-        public static IZooManager FromDatabase(IZooDatabase database)
-            => new ZooManager(database);
+        public float CalculateWeekTotalFoodRequirement()
+        {
+            var total = 0.0f;
+            foreach (var animal in Database.Animals)
+            {
+                total += animal.CalculateRequiredFood();
+            }
 
-        // process logic for lion eating an animal here...
+            return total;
+        }
+
+        public IReadOnlyDictionary<string, float> CalculateIndividualSpeciesFoodRequirement()
+        {
+            var speciesFoodMap = new Dictionary<string, float>();
+
+            foreach (var animal in Database.Animals)
+            {
+                // calculate food requirement for current animal
+                var required = animal.CalculateRequiredFood();
+
+                // try to get the species food requirement and if value is not found in map, the total is by default set to 0.0f
+                speciesFoodMap.TryGetValue(animal.Species, out float total);
+                total += required;
+                speciesFoodMap[animal.Species] = total; // add or replace value in map
+            }
+
+            return speciesFoodMap;
+        }
+
+        public IReadOnlyList<IAnimal> GetLions()
+        {
+            var lions = new List<IAnimal>();
+
+            foreach (var animal in Database.Animals)
+            {
+                if (animal is Lion)
+                    lions.Add(animal);
+            }
+
+            return lions;
+        }
+
+        public IAnimal GetRandomLion()
+        {
+            var lions = GetLions();
+            if (lions.Count == 0)
+                return null;
+
+            return lions[Randomizer.Next(lions.Count)];
+        }
+
+        public IAnimal FindTargetForLion(IAnimal lion)
+        {
+            Debug.Assert(lion is Lion);
+
+            var targets = new List<IAnimal>();
+            foreach (var animal in Database.Animals)
+            {
+                if (animal is Lion)
+                    continue;
+
+                if (animal is Panda)
+                    continue;
+
+                targets.Add(animal);
+            }
+
+            if (targets.Count == 0)
+                return null;
+
+            return targets[Randomizer.Next(targets.Count)];
+        }
+
+        // process logic for lion eating an animal here - AdvanceWeek returns the animal that was killed (if any)
+        public KilledAnimalResult AdvanceWeek()
+        {
+            KilledAnimalResult result = null;
+
+            // find a lion that will be the killer of a poor little zoo inhabitant
+            var lion = GetRandomLion();
+            if (lion != null)
+            {
+                var target = FindTargetForLion(lion);
+                if (target != null)
+                {
+                    // target is killed
+                    result = new KilledAnimalResult(lion, target);
+                    Database.Delete(target.Id);
+                }
+            }
+
+            foreach (var animal in Database.Animals)
+            {
+                animal.AdvanceWeek();
+            }
+
+            return result;
+        }
+
+        public static IZooManager FromDatabase(IRandomizer randomizer, IZooDatabase database)
+            => new ZooManager(randomizer, database);
     }
 }

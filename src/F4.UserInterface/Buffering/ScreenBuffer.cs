@@ -43,6 +43,23 @@ namespace F4.UserInterface.Buffering
         public void Clear()
             => Clear(' ', ConsoleColor.Gray, ConsoleColor.Black);
 
+        public void Clear(Rectangle rectangle)
+        {
+            Debug.Assert(
+                rectangle.Left >= 0 &&
+                rectangle.Top >= 0 &&
+                rectangle.Right <= Width &&
+                rectangle.Height <= Height);
+
+            for (int y = rectangle.Top; y < rectangle.Bottom; y++)
+            {
+                for (int x = rectangle.Left; x < rectangle.Right; x++)
+                {
+                    Buffer[y * Width + x] = new ScreenBufferCharacter(' ', ConsoleColor.Gray, ConsoleColor.Black);
+                }
+            }
+        }
+
         public void Draw(int x, int y, char ch, ConsoleColor foreground, ConsoleColor background)
         {
             Debug.Assert(x < Width);

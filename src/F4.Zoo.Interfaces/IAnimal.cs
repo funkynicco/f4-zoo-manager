@@ -35,6 +35,11 @@ namespace F4.Zoo.Interfaces
         TimeSpan Age { get; }
 
         /// <summary>
+        /// Adds 7 days to the animals age.
+        /// </summary>
+        void AdvanceWeek();
+
+        /// <summary>
         /// Calculates the required food to feed the animal based on its type, age and weight.
         /// </summary>
         float CalculateRequiredFood();

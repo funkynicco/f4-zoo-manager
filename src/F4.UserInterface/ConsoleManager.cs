@@ -28,6 +28,8 @@ namespace F4.UserInterface
 
         private readonly ScreenBufferManager _screenBufferManager;
 
+        public Rectangle ConsoleRectangle => new Rectangle(0, 0, _screenBufferManager.Backbuffer.Width, _screenBufferManager.Backbuffer.Height);
+
         private ConsoleManager(IZooManager zooManager)
         {
             _zooManager = zooManager;
@@ -55,12 +57,12 @@ namespace F4.UserInterface
                 did_something = true;
             }
 
-            var size = new Size(Console.WindowWidth, Console.WindowHeight);
+            var size = _screenBufferManager.GetConsoleWindowSize();
             if (size != _oldWindowSize)
             {
                 _oldWindowSize = size;
                 _lastWindowSizeUpdated = DateTime.UtcNow;
-                _screenBufferManager.Resize(Console.WindowWidth, Console.WindowHeight);
+                _screenBufferManager.Resize(size.Width, size.Height);
 
                 foreach (var window in _windows)
                 {

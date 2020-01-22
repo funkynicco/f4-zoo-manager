@@ -1,8 +1,10 @@
-﻿using F4.UserInterface.Interfaces;
+﻿using F4.UserInterface.Buffering;
+using F4.UserInterface.Interfaces;
 using F4.UserInterface.Interfaces.Windows;
 using F4.UserInterface.Windows;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace F4.UserInterface
@@ -12,6 +14,8 @@ namespace F4.UserInterface
     /// </summary>
     internal interface IConsoleManagerInternal : IConsoleManager
     {
+        Rectangle ConsoleRectangle { get; }
+
         void Redraw();
         
         void Close(IWindow window);

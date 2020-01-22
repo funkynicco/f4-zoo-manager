@@ -18,7 +18,7 @@ namespace F4.ConsoleApp
         {
             database.DeleteAll();
 
-            const int NumberOfAnimalsToAdd = 30;
+            const int NumberOfAnimalsToAdd = 10;
             var random = new Random(Environment.TickCount);
             var animalSpecies = new string[] { "lion", "panda", "penguin", "wombat" };
             var animalNames = new List<string>(
@@ -33,7 +33,10 @@ namespace F4.ConsoleApp
                 var name = animalNames[name_index];
                 animalNames.RemoveAt(name_index);
 
-                database.Create(species, name);
+                // randomize age up to 10 years old
+                var age = new TimeSpan(random.Next(3650), 0, 0, 0);
+
+                database.Create(species, name, age);
             }
         }
 
@@ -41,7 +44,8 @@ namespace F4.ConsoleApp
         {
             Console.Title = "Zoo Manager 2020";
 
-            var zoo = ZooManager.FromDatabase(ZooDatabase.FromFile("zoo.xml"));
+            var randomizer = new Randomizer();
+            var zoo = ZooManager.FromDatabase(randomizer, ZooDatabase.FromFile("zoo.xml"));
 
             CreateRandomAnimals(zoo.Database);
 
