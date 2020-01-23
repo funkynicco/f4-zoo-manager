@@ -17,6 +17,7 @@ namespace F4.UserInterface
     public class ConsoleManager : IConsoleManagerInternal, IConsoleManager
     {
         private readonly IZooManager _zooManager;
+        private readonly IRandomizer _randomizer;
 
         private readonly LinkedList<Window> _windows = new LinkedList<Window>();
         private Size _oldWindowSize = new Size(0, 0);
@@ -30,9 +31,10 @@ namespace F4.UserInterface
 
         public Rectangle ConsoleRectangle => new Rectangle(0, 0, _screenBufferManager.Backbuffer.Width, _screenBufferManager.Backbuffer.Height);
 
-        private ConsoleManager(IZooManager zooManager)
+        private ConsoleManager(IZooManager zooManager, IRandomizer randomizer)
         {
             _zooManager = zooManager;
+            _randomizer = randomizer;
 
             RegisterDependences();
 
@@ -147,6 +149,7 @@ namespace F4.UserInterface
             _serviceCollection.AddSingleton<IConsoleManagerInternal>(this);
             _serviceCollection.AddSingleton<IZooManager>(_zooManager);
             _serviceCollection.AddSingleton<IZooDatabase>(_zooManager.Database);
+            _serviceCollection.AddSingleton<IRandomizer>(_randomizer);
             _serviceCollection.AddTransient<IDesktop, Desktop>();
             _serviceCollection.AddTransient<IMessage, Message>();
             _serviceCollection.AddTransient<IAnimalList, AnimalList>();
@@ -172,7 +175,7 @@ namespace F4.UserInterface
 
         // static
 
-        public static IConsoleManager Create(IZooManager zooManager)
-            => new ConsoleManager(zooManager);
+        public static IConsoleManager Create(IZooManager zooManager, IRandomizer randomizer)
+            => new ConsoleManager(zooManager, randomizer);
     }
 }

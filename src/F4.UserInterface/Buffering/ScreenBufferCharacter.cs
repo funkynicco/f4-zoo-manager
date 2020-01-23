@@ -12,25 +12,18 @@ namespace F4.UserInterface.Buffering
 
         public ConsoleColor Background { get; set; }
 
-        public ScreenBufferCharacter(char character)
-        {
-            Character = character;
-            Foreground = ConsoleColor.Gray;
-            Background = ConsoleColor.Black;
-        }
+        public bool Underline { get; set; }
 
-        public ScreenBufferCharacter(char character, ConsoleColor foreground)
-        {
-            Character = character;
-            Foreground = foreground;
-            Background = ConsoleColor.Black;
-        }
-
-        public ScreenBufferCharacter(char character, ConsoleColor foreground, ConsoleColor background)
+        public ScreenBufferCharacter(
+            char character,
+            ConsoleColor foreground = ConsoleColor.Gray,
+            ConsoleColor background = ConsoleColor.Black,
+            bool underline = false)
         {
             Character = character;
             Foreground = foreground;
             Background = background;
+            Underline = underline;
         }
 
         public override bool Equals(object obj)
@@ -49,7 +42,8 @@ namespace F4.UserInterface.Buffering
             return
                 left.Character == right.Character &&
                 left.Foreground == right.Foreground &&
-                left.Background == right.Background;
+                left.Background == right.Background &&
+                left.Underline == right.Underline;
         }
 
         public static bool operator !=(ScreenBufferCharacter left, ScreenBufferCharacter right)
@@ -57,7 +51,8 @@ namespace F4.UserInterface.Buffering
             return
                 left.Character != right.Character ||
                 left.Foreground != right.Foreground ||
-                left.Background != right.Background;
+                left.Background != right.Background ||
+                left.Underline != right.Underline;
         }
     }
 }

@@ -26,10 +26,10 @@ namespace F4.UserInterface.Windows
             base.Draw(screenBuffer);
 
             var clientRect = ClientRectangle;
-            screenBuffer.Draw(clientRect.X, clientRect.Y, "F1 - List animals");
-            screenBuffer.Draw(clientRect.X, clientRect.Y + 1, "F2 - Add animal");
-            screenBuffer.Draw(clientRect.X, clientRect.Y + 2, "F3 - Advance week");
-            screenBuffer.Draw(clientRect.X, clientRect.Y + 3, "F4 - Show this weeks food requirement");
+            var y = 0;
+            screenBuffer.Draw(clientRect.X, clientRect.Y+y++, "F1 - List animals");
+            screenBuffer.Draw(clientRect.X, clientRect.Y + y++, "F2 - Advance week");
+            screenBuffer.Draw(clientRect.X, clientRect.Y + y++, "F3 - Show this weeks food requirement");
         }
 
         public override void OnInputKey(ConsoleKeyInfo key)
@@ -39,10 +39,6 @@ namespace F4.UserInterface.Windows
                 ConsoleManager.CreateWindow<IAnimalList>();
             }
             else if (key.Key == ConsoleKey.F2)
-            {
-                ConsoleManager.CreateWindow<IAddAnimal>();
-            }
-            else if (key.Key == ConsoleKey.F3)
             {
                 var killedAnimalResult = _zooManager.AdvanceWeek();
 
@@ -54,7 +50,7 @@ namespace F4.UserInterface.Windows
                 ConsoleManager.CreateWindow<IMessage>()
                     .SetText(message);
             }
-            else if (key.Key == ConsoleKey.F4)
+            else if (key.Key == ConsoleKey.F3)
             {
                 ConsoleManager.CreateWindow<IShowAnimalRequirements>();
             }

@@ -7,26 +7,30 @@ namespace F4.UserInterface.Interfaces.Buffering
 {
     public interface IScreenBuffer
     {
-        public void Clear(char ch, ConsoleColor foreground, ConsoleColor background);
-        
-        public void Clear(char ch, ConsoleColor foreground);
-        
-        public void Clear(char ch);
-        
-        public void Clear();
+        bool EnableUnderline { get; set; }
 
-        public void Clear(Rectangle rectangle);
+        void Clear(char ch, ConsoleColor foreground, ConsoleColor background);
+        
+        void Clear(char ch, ConsoleColor foreground);
+        
+        void Clear(char ch);
+        
+        void Clear();
 
-        public void Draw(int x, int y, char ch, ConsoleColor foreground, ConsoleColor background);
+        void Clear(Rectangle rectangle);
+
+        void Draw(int x, int y, char ch, ConsoleColor foreground, ConsoleColor background);
         
-        public void Draw(int x, int y, string text, ConsoleColor foreground, ConsoleColor background);
+        void Draw(int x, int y, string text, ConsoleColor foreground, ConsoleColor background);
         
-        public void Draw(int x, int y, char ch, ConsoleColor foreground);
+        void Draw(int x, int y, char ch, ConsoleColor foreground);
         
-        public void Draw(int x, int y, string text, ConsoleColor foreground);
+        void Draw(int x, int y, string text, ConsoleColor foreground);
         
-        public void Draw(int x, int y, char ch);
+        void Draw(int x, int y, char ch);
         
-        public void Draw(int x, int y, string text);
+        void Draw(int x, int y, string text);
+
+        void SetCursorPosition(int x, int y);
     }
 }

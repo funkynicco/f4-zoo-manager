@@ -29,7 +29,7 @@ namespace F4.UserInterface.Windows
                 0,
                 0,
                 Math.Min(45, consoleRect.Width),
-                Math.Min(30, consoleRect.Height));
+                Math.Min(26, consoleRect.Height));
 
             CenterRectangle(ref rect);
             WindowRectangle = rect;
@@ -53,13 +53,13 @@ namespace F4.UserInterface.Windows
             {
                 var line = $"{animal.Species.PadRight(10)}{animal.Name.Clip(19).PadRight(20)}{animal.Age.ToBirthdayFormat()}";
 
-                var fc = ConsoleColor.Gray;
-                var bc = ConsoleColor.Black;
+                var foreground = ConsoleColor.Gray;
+                var background = ConsoleColor.Black;
 
                 if (index == _selectedIndex)
-                    bc = ConsoleColor.Blue;
+                    background = ConsoleColor.Blue;
 
-                screenBuffer.Draw(ClientRectangle.X, y, line, fc, bc);
+                screenBuffer.Draw(ClientRectangle.X, y, line, foreground, background);
 
                 if (++y >= ClientRectangle.Bottom)
                     break;
@@ -91,6 +91,10 @@ namespace F4.UserInterface.Windows
                     _selectedIndex++;
                     Invalidate();
                 }
+            }
+            else if (key.Key == ConsoleKey.A)
+            {
+                ConsoleManager.CreateWindow<IAddAnimal>();
             }
         }
     }

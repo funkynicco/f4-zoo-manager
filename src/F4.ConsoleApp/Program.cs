@@ -50,16 +50,7 @@ namespace F4.ConsoleApp
 
             CreateRandomAnimals(zoo.Database);
 
-            var consoleManager = ConsoleManager.Create(zoo);
-
-            //consoleManager.CreateWindow<IAnimalList>()
-            //    .SetZooDatabase(zoo.Database);
-
-            //consoleManager.CreateWindow<IMessage>()
-            //    .SetText("Johnny the Crazy Elephant was killed by Furrball.");
-
-            //consoleManager.CreateWindow<IMessage>()
-            //    .SetText("hello world");
+            var consoleManager = ConsoleManager.Create(zoo, randomizer);
 
             while (true)
             {

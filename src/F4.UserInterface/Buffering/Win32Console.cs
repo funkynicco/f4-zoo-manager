@@ -74,6 +74,15 @@ namespace F4.UserInterface.Buffering
             public COORD dwMaximumWindowSize;
         }
 
+        [StructLayout(LayoutKind.Sequential)]
+        public struct CONSOLE_CURSOR_INFO
+        {
+            public int dwSize;
+
+            [MarshalAs(UnmanagedType.Bool)]
+            public bool bVisible;
+        }
+
         public const int STD_OUTPUT_HANDLE = -11;
 
         public const int GENERIC_READ = unchecked((int)0x80000000);
@@ -91,6 +100,8 @@ namespace F4.UserInterface.Buffering
         public const short BACKGROUND_GREEN = 0x0020;
         public const short BACKGROUND_RED = 0x0040;
         public const short BACKGROUND_INTENSITY = 0x0080;
+
+        public const short COMMON_LVB_UNDERSCORE = unchecked((short)0x8000);
 
         [DllImport("kernel32.dll")]
         public static extern IntPtr GetStdHandle(int nStdHandle);
@@ -136,5 +147,13 @@ namespace F4.UserInterface.Buffering
         [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetConsoleScreenBufferInfo(IntPtr hConsoleOutput, out CONSOLE_SCREEN_BUFFER_INFO lpConsoleScreenBufferInfo);
+
+        [DllImport("kernel32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SetConsoleCursorPosition(IntPtr hConsoleOutput, COORD coord);
+
+        [DllImport("kernel32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SetConsoleCursorInfo(IntPtr hConsoleOutput, ref CONSOLE_CURSOR_INFO cci);
     }
 }

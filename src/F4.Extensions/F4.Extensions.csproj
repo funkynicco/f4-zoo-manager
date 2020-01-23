@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\F4.Zoo.Interfaces\F4.Zoo.Interfaces.csproj" />
+  </ItemGroup>
+
 </Project>

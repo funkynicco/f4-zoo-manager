@@ -38,8 +38,8 @@ namespace F4.UserInterface.Buffering
 
         public void Resize(int width, int height)
         {
-            _display = new ScreenBuffer(width, height);
-            Backbuffer = new ScreenBuffer(width, height);
+            _display = new ScreenBuffer(this, width, height);
+            Backbuffer = new ScreenBuffer(this, width, height);
 
             var newBuffer = Win32Console.CreateConsoleScreenBuffer(
                 Win32Console.GENERIC_READ | Win32Console.GENERIC_WRITE,
@@ -49,6 +49,11 @@ namespace F4.UserInterface.Buffering
                 IntPtr.Zero);
 
             Win32Console.SetConsoleScreenBufferSize(newBuffer, new Win32Console.COORD((short)width, (short)height));
+
+            var cci = new Win32Console.CONSOLE_CURSOR_INFO();
+            cci.dwSize = 100;
+            cci.bVisible = false;
+            Win32Console.SetConsoleCursorInfo(newBuffer, ref cci);
 
             var cfi = new Win32Console.CONSOLE_FONT_INFOEX();
             cfi.cbSize = Marshal.SizeOf(cfi);
@@ -62,6 +67,7 @@ namespace F4.UserInterface.Buffering
             Debug.Assert(Win32Console.SetConsoleActiveScreenBuffer(newBuffer));
             if (_screenBuffer != IntPtr.Zero)
                 Debug.Assert(Win32Console.CloseHandle(_screenBuffer));
+
             _screenBuffer = newBuffer;
         }
 
@@ -128,6 +134,9 @@ namespace F4.UserInterface.Buffering
                         ci.Character = (byte)displayChar.Character;
                         ci.Attributes = GetAttributesFromColors(displayChar.Foreground, displayChar.Background);
 
+                        if (displayChar.Underline)
+                            ci.Attributes |= Win32Console.COMMON_LVB_UNDERSCORE;
+
                         var ci_array = new Win32Console.CHAR_INFO[1] { ci };
 
                         var rc = new Win32Console.SMALL_RECT((short)x, (short)y, (short)(x + 1), (short)(y + 1));
@@ -141,5 +150,8 @@ namespace F4.UserInterface.Buffering
                 }
             }
         }
+
+        public void SetCursorPosition(int x, int y)
+            => Win32Console.SetConsoleCursorPosition(_screenBuffer, new Win32Console.COORD((short)x, (short)y));
     }
 }

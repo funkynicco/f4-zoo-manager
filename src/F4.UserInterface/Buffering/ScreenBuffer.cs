@@ -9,20 +9,25 @@ namespace F4.UserInterface.Buffering
 {
     internal class ScreenBuffer : IScreenBuffer
     {
+        public ScreenBufferManager Manager { get; }
+
         public int Width { get; }
 
         public int Height { get; }
 
         public ScreenBufferCharacter[] Buffer { get; }
 
-        public ScreenBuffer(int width, int height)
+        public bool EnableUnderline { get; set; } = false;
+
+        public ScreenBuffer(ScreenBufferManager manager, int width, int height)
         {
+            Manager = manager;
             Width = width;
             Height = height;
             Buffer = new ScreenBufferCharacter[width * height];
             for (int i = 0; i < Buffer.Length; i++)
             {
-                Buffer[i] = new ScreenBufferCharacter(' ', ConsoleColor.Gray, ConsoleColor.Black);
+                Buffer[i] = new ScreenBufferCharacter(' ', ConsoleColor.Gray, ConsoleColor.Black, EnableUnderline);
             }
         }
 
@@ -30,7 +35,7 @@ namespace F4.UserInterface.Buffering
         {
             for (int i = 0; i < Width * Height; i++)
             {
-                Buffer[i] = new ScreenBufferCharacter(ch, foreground, background);
+                Buffer[i] = new ScreenBufferCharacter(ch, foreground, background, EnableUnderline);
             }
         }
 
@@ -55,7 +60,7 @@ namespace F4.UserInterface.Buffering
             {
                 for (int x = rectangle.Left; x < rectangle.Right; x++)
                 {
-                    Buffer[y * Width + x] = new ScreenBufferCharacter(' ', ConsoleColor.Gray, ConsoleColor.Black);
+                    Buffer[y * Width + x] = new ScreenBufferCharacter(' ', ConsoleColor.Gray, ConsoleColor.Black, EnableUnderline);
                 }
             }
         }
@@ -64,7 +69,7 @@ namespace F4.UserInterface.Buffering
         {
             Debug.Assert(x < Width);
             Debug.Assert(y < Height);
-            Buffer[y * Width + x] = new ScreenBufferCharacter(ch, foreground, background);
+            Buffer[y * Width + x] = new ScreenBufferCharacter(ch, foreground, background, EnableUnderline);
         }
 
         public void Draw(int x, int y, string text, ConsoleColor foreground, ConsoleColor background)
@@ -78,7 +83,7 @@ namespace F4.UserInterface.Buffering
 
             for (int i = 0; i < len; i++)
             {
-                Buffer[y * Width + x + i] = new ScreenBufferCharacter(text[i], foreground, background);
+                Buffer[y * Width + x + i] = new ScreenBufferCharacter(text[i], foreground, background, EnableUnderline);
             }
         }
 
@@ -93,5 +98,8 @@ namespace F4.UserInterface.Buffering
 
         public void Draw(int x, int y, string text)
             => Draw(x, y, text, ConsoleColor.Gray, ConsoleColor.Black);
+
+        public void SetCursorPosition(int x, int y)
+            => Manager.SetCursorPosition(x, y);
     }
 }

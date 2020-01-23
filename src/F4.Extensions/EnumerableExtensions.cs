@@ -1,4 +1,5 @@
-﻿using System;
+﻿using F4.Zoo.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,11 @@ namespace F4.Extensions
         /// </summary>
         public static T RandomOrDefault<T>(this IEnumerable<T> enumerable)
             => enumerable.OrderBy(a => _random.Next(10000)).FirstOrDefault();
+
+        /// <summary>
+        /// Picks a random item from an IEnumerable using a provided <see cref="IRandomizer"/>.
+        /// </summary>
+        public static T RandomOrDefault<T>(this IEnumerable<T> enumerable, IRandomizer randomizer)
+            => enumerable.OrderBy(a => randomizer.Next(10000)).FirstOrDefault();
     }
 }
