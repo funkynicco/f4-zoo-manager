@@ -11,8 +11,8 @@ namespace F4.Zoo.Animals
         /// </summary>
         public const float AverageWeight = 190.0f;
 
-        public Lion(Guid id, string name) :
-            base(id, name, AverageWeight)
+        public Lion(Guid id, string name, TimeSpan? age = null) :
+            base(id, name, AverageWeight, age)
         {
         }
 

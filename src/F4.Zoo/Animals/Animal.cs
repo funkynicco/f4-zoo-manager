@@ -17,7 +17,7 @@ namespace F4.Zoo.Animals
 
         public TimeSpan Age { get; set; }
 
-        public Animal(Guid id, string name, float weight)
+        public Animal(Guid id, string name, float weight, TimeSpan? age)
         {
             if (id == Guid.Empty)
                 throw new ArgumentException($"The {nameof(id)} parameter cannot be empty.");
@@ -31,7 +31,13 @@ namespace F4.Zoo.Animals
             Id = id;
             Name = name;
             Weight = weight;
+
+            if (age.HasValue)
+                Age = age.Value;
         }
+
+        public override string ToString()
+            => $"[{Species}] {Name}";
 
         public void AdvanceWeek() // proceed to next week by adding 7 days to the animals age
             => Age += TimeSpan.FromDays(7);

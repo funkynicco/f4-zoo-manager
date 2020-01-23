@@ -25,21 +25,18 @@ namespace F4.Zoo
         private static Animal ConstructAnimal(Type type, Guid id, string name, TimeSpan? age = null)
         {
             // get the constructor that takes a string
-            var constructor = type.GetConstructor(new Type[] { typeof(Guid), typeof(string) });
+            var constructor = type.GetConstructor(new Type[] { typeof(Guid), typeof(string), typeof(TimeSpan?) });
             if (constructor != null)
             {
                 Animal animal;
                 try
                 {
-                    animal = (Animal)constructor.Invoke(new object[] { id, name });
+                    animal = (Animal)constructor.Invoke(new object[] { id, name, age });
                 }
                 catch (TargetInvocationException ex)
                 {
                     throw ex.InnerException;
                 }
-
-                if (age.HasValue)
-                    animal.Age = age.Value;
 
                 return animal;
             }

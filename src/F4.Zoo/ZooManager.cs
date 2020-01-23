@@ -15,7 +15,7 @@ namespace F4.Zoo
 
         public IZooDatabase Database { get; }
 
-        private ZooManager(IRandomizer randomizer, IZooDatabase database)
+        public ZooManager(IRandomizer randomizer, IZooDatabase database)
         {
             Randomizer = randomizer;
             Database = database;
@@ -103,10 +103,11 @@ namespace F4.Zoo
             var lion = GetRandomLion();
             if (lion != null)
             {
+                // we have a lion, find a target for the hungry furrball
                 var target = FindTargetForLion(lion);
                 if (target != null)
                 {
-                    // target is killed
+                    // target found and killed
                     result = new KilledAnimalResult(lion, target);
                     Database.Delete(target.Id);
                 }

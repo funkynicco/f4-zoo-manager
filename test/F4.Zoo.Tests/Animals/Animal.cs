@@ -10,8 +10,8 @@ namespace F4.Zoo.Tests.Animals
     {
         class TestAnimal : Zoo.Animals.Animal
         {
-            public TestAnimal(Guid id, string name) :
-                base(id, name, 0.0f)
+            public TestAnimal(Guid id, string name, TimeSpan? age = null) :
+                base(id, name, 0.0f, age)
             {
             }
 
