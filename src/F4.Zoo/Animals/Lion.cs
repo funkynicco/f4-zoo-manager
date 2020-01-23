@@ -1,4 +1,5 @@
-﻿using System;
+﻿using F4.Zoo.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -18,5 +19,16 @@ namespace F4.Zoo.Animals
 
         public override float CalculateRequiredFood()
             => 0.0f; // lions eat other animals, needs no man-made food
+
+        public override bool CanEat(IAnimal animal)
+        {
+            if (animal is Lion)
+                return false;
+
+            if (animal is Panda)
+                return false;
+
+            return true;
+        }
     }
 }

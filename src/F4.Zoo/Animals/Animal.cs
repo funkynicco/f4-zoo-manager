@@ -43,5 +43,8 @@ namespace F4.Zoo.Animals
             => Age += TimeSpan.FromDays(7);
 
         public abstract float CalculateRequiredFood();
+
+        public virtual bool CanEat(IAnimal animal)
+            => false; // by default the animal cannot eat any other animal
     }
 }

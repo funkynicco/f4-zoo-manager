@@ -22,5 +22,26 @@ namespace F4.Zoo.Tests.Animals
 
             Assert.Equal(expected, requiredFood);
         }
+
+        [Theory]
+        [InlineData("lion", false)]
+        [InlineData("panda", false)]
+        [InlineData("penguin", true)]
+        [InlineData("wombat", true)]
+        public void CanEat_Animals_Expected(string animalType, bool expected)
+        {
+            var lion = new Zoo.Animals.Lion(Guid.NewGuid(), "some name");
+
+            var canEat = false;
+            switch (animalType)
+            {
+                case "lion": canEat = lion.CanEat(new Zoo.Animals.Lion(Guid.NewGuid(), "target")); break;
+                case "panda": canEat = lion.CanEat(new Zoo.Animals.Panda(Guid.NewGuid(), "target")); break;
+                case "penguin": canEat = lion.CanEat(new Zoo.Animals.Penguin(Guid.NewGuid(), "target")); break;
+                case "wombat": canEat = lion.CanEat(new Zoo.Animals.Wombat(Guid.NewGuid(), "target")); break;
+            }
+
+            Assert.Equal(expected, canEat);
+        }
     }
 }

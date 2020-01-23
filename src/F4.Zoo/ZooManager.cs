@@ -79,13 +79,9 @@ namespace F4.Zoo
             var targets = new List<IAnimal>();
             foreach (var animal in Database.Animals)
             {
-                if (animal is Lion)
-                    continue;
-
-                if (animal is Panda)
-                    continue;
-
-                targets.Add(animal);
+                // can lion eat this animal?
+                if (lion.CanEat(animal))
+                    targets.Add(animal);
             }
 
             if (targets.Count == 0)

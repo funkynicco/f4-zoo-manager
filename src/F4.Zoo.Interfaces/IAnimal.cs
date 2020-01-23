@@ -43,5 +43,11 @@ namespace F4.Zoo.Interfaces
         /// Calculates the required food to feed the animal based on its type, age and weight.
         /// </summary>
         float CalculateRequiredFood();
+
+        /// <summary>
+        /// Determines whether this animal can eat another animal.
+        /// </summary>
+        /// <param name="animal">Other animal</param>
+        bool CanEat(IAnimal animal);
     }
 }
