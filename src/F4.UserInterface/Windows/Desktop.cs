@@ -27,9 +27,10 @@ namespace F4.UserInterface.Windows
 
             var clientRect = ClientRectangle;
             var y = 0;
-            screenBuffer.Draw(clientRect.X, clientRect.Y+y++, "F1 - List animals");
+            screenBuffer.Draw(clientRect.X, clientRect.Y + y++, "F1 - List animals");
             screenBuffer.Draw(clientRect.X, clientRect.Y + y++, "F2 - Advance week");
             screenBuffer.Draw(clientRect.X, clientRect.Y + y++, "F3 - Show this weeks food requirement");
+            screenBuffer.Draw(clientRect.X, clientRect.Y + y++, "F4 - Wipe and restart database");
         }
 
         public override void OnInputKey(ConsoleKeyInfo key)
@@ -53,6 +54,10 @@ namespace F4.UserInterface.Windows
             else if (key.Key == ConsoleKey.F3)
             {
                 ConsoleManager.CreateWindow<IShowAnimalRequirements>();
+            }
+            else if (key.Key == ConsoleKey.F4)
+            {
+                ConsoleManager.CreateWindow<IWipeDatabase>();
             }
         }
     }

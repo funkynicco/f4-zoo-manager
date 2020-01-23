@@ -155,6 +155,7 @@ namespace F4.UserInterface
             _serviceCollection.AddTransient<IAnimalList, AnimalList>();
             _serviceCollection.AddTransient<IAddAnimal, AddAnimal>();
             _serviceCollection.AddTransient<IShowAnimalRequirements, ShowAnimalRequirements>();
+            _serviceCollection.AddTransient<IWipeDatabase, WipeDatabase>();
             ServiceProvider = _serviceCollection.BuildServiceProvider();
         }
 

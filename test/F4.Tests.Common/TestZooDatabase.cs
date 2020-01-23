@@ -39,5 +39,8 @@ namespace F4.Tests.Common
 
         public IAnimal Get(Guid id)
             => _animals.Where(a => a.Id == id).FirstOrDefault();
+
+        public void Reset(int numberOfAnimals)
+            => throw new NotImplementedException();
     }
 }

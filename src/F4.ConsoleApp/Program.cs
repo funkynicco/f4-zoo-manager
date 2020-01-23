@@ -15,40 +15,14 @@ namespace F4.ConsoleApp
 {
     class Program
     {
-        static void CreateRandomAnimals(IZooDatabase database) // temporary placement
-        {
-            database.DeleteAll();
-
-            const int NumberOfAnimalsToAdd = 10;
-            var random = new Random(Environment.TickCount);
-            var animalSpecies = new string[] { "lion", "panda", "penguin", "wombat" };
-            var animalNames = new List<string>(
-                Media.animal_names.Split(new char[] { '\r', '\n' },
-                StringSplitOptions.RemoveEmptyEntries)
-                .Where(a => a.Length != 0));
-
-            for (int i = 0; i < NumberOfAnimalsToAdd; i++)
-            {
-                var species = animalSpecies[random.Next(animalSpecies.Length)];
-                var name_index = random.Next(animalNames.Count);
-                var name = animalNames[name_index];
-                animalNames.RemoveAt(name_index);
-
-                // randomize age up to 10 years old
-                var age = new TimeSpan(random.Next(3650), 0, 0, 0);
-
-                database.Create(species, name, age);
-            }
-        }
-
         static void Main(string[] args)
         {
             Console.Title = "Zoo Manager 2020";
 
             var randomizer = new Randomizer();
-            var zoo = ZooManager.FromDatabase(randomizer, ZooDatabase.FromFile("zoo.xml"));
-
-            CreateRandomAnimals(zoo.Database);
+            var animalNamesDatabase = new AnimalNamesDatabase(randomizer);
+            var database = ZooDatabase.FromFile(randomizer, animalNamesDatabase, "zoo.xml");
+            var zoo = ZooManager.FromDatabase(randomizer, database);
 
             var consoleManager = ConsoleManager.Create(zoo, randomizer);
 

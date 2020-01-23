@@ -35,5 +35,11 @@ namespace F4.Zoo.Interfaces
         /// Deletes all the animals in the database.
         /// </summary>
         void DeleteAll();
+
+        /// <summary>
+        /// Resets the database and adds 10 animals.
+        /// </summary>
+        /// <param name="numberOfAnimals">Number of animals the database starts with.</param>
+        void Reset(int numberOfAnimals = 10);
     }
 }

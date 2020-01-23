@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Xml;
@@ -12,13 +13,17 @@ namespace F4.Zoo
 {
     public class ZooDatabase : IZooDatabase
     {
+        private readonly IRandomizer _randomizer;
+        private readonly IAnimalNamesDatabase _animalNamesDatabase;
         private readonly string _filename;
         private readonly Dictionary<Guid, IAnimal> _animals = new Dictionary<Guid, IAnimal>();
 
         public IEnumerable<IAnimal> Animals => _animals.Values;
 
-        private ZooDatabase(string filename)
+        private ZooDatabase(IRandomizer randomizer, IAnimalNamesDatabase animalNamesDatabase, string filename)
         {
+            _randomizer = randomizer;
+            _animalNamesDatabase = animalNamesDatabase;
             _filename = filename;
         }
 
@@ -44,30 +49,39 @@ namespace F4.Zoo
             throw new InvalidOperationException($"There is no suitable constructor for type {type.FullName} that takes in 'Guid id' and 'string name'.");
         }
 
-        public IAnimal Create(string animalType, string name, TimeSpan? age = null)
+        private static IReadOnlyList<Type> GetAnimalTypes()
         {
+            var result = new List<Type>();
+
             // go through each type in this assembly (F4.Zoo) and find types that inherits from Animal
             foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
             {
                 if (type.IsClass &&
                     type.IsSubclassOf(typeof(Animal)))
-                {
-                    if (string.Compare(type.Name, animalType, true, CultureInfo.InvariantCulture) == 0)
-                    {
-                        var animal = ConstructAnimal(type, Guid.NewGuid(), name, age);
-
-                        // add animal to database
-                        _animals.Add(animal.Id, animal);
-
-                        // save database
-                        Save();
-
-                        return animal;
-                    }
-                }
+                    result.Add(type);
             }
 
-            throw new AnimalTypeNotFoundException(animalType);
+            return result;
+        }
+
+        public IAnimal Create(string animalType, string name, TimeSpan? age = null)
+        {
+            var type = GetAnimalTypes()
+                .Where(a => string.Compare(a.Name, animalType, true, CultureInfo.InvariantCulture) == 0)
+                .FirstOrDefault();
+
+            if (type == null)
+                throw new AnimalTypeNotFoundException(animalType);
+
+            var animal = ConstructAnimal(type, Guid.NewGuid(), name, age);
+
+            // add animal to database
+            _animals.Add(animal.Id, animal);
+
+            // save database
+            Save();
+
+            return animal;
         }
 
         public IAnimal Get(Guid id)
@@ -91,6 +105,24 @@ namespace F4.Zoo
                 return;
 
             _animals.Clear();
+            Save();
+        }
+
+        public void Reset(int numberOfAnimals = 10)
+        {
+            _animals.Clear();
+
+            var animalTypes = GetAnimalTypes();
+            for (int i = 0; i < numberOfAnimals; ++i)
+            {
+                var type = animalTypes[_randomizer.Next(animalTypes.Count)];
+                var name = _animalNamesDatabase.GetRandomName();
+                var age = TimeSpan.FromDays(_randomizer.Next(3650));
+
+                var animal = ConstructAnimal(type, Guid.NewGuid(), name, age);
+                _animals.Add(animal.Id, animal);
+            }
+
             Save();
         }
 
@@ -118,9 +150,9 @@ namespace F4.Zoo
             doc.Save(_filename);
         }
 
-        public static IZooDatabase FromFile(string filename, bool createIfNotExist = true)
+        public static IZooDatabase FromFile(IRandomizer randomizer, IAnimalNamesDatabase animalNamesDatabase, string filename, bool createIfNotExist = true)
         {
-            var database = new ZooDatabase(filename);
+            var database = new ZooDatabase(randomizer, animalNamesDatabase, filename);
 
             if (createIfNotExist &&
                 !File.Exists(filename))
