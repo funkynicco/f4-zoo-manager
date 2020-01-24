@@ -3,6 +3,7 @@ using F4.Zoo.Animals;
 using F4.Zoo.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Xunit;
@@ -28,11 +29,13 @@ namespace F4.Zoo.Tests
                 }
             }
 
+            Debug.Assert(_database.Animals.Count() == AmountOfAnimals);
+
             _manager = new Zoo.ZooManager(_randomizer, _database);
         }
 
         [Fact]
-        public void AdvanceWeek_AnimalKilled_Expected()
+        public void AdvanceWeek_TargetExists_TargetKilled()
         {
             var killedAnimalResult = _manager.AdvanceWeek();
 
